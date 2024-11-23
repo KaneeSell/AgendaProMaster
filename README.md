@@ -1,6 +1,6 @@
 # AgendaProMaster
 <div align="center">
-<a href="https://kaneesell.github.io/AgendaProMasterMaster/">
+<a href="https://kaneesell.github.io/AgendaProMaster/">
 <img alt="Static Badge" src="https://capsule-render.vercel.app/api?type=waving&height=200&color=gradient&text=AgendaProMaster">
 </a>
 AgendaProMasterMaster é uma ferramenta ideal para estudantes que buscam eficiência e foco em suas rotinas.
