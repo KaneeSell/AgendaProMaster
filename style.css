@@ -5,13 +5,19 @@
     -moz-user-select: none;
     user-select: none;
   }
-
+  
   @media (min-width: 768px) {
     .bd-placeholder-img-lg {
       font-size: 3.5rem;
     }
+    .eventNumber{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0px 5px;
+      gap: 20px;
+    }
   }
-
   .b-example-divider {
     width: 100%;
     height: 3rem;
@@ -78,4 +84,32 @@
   #divAgenda,
   #divNovoEvento{
     display: none;
+  }
+  .eventNumber{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 5px;
+    gap: 10px;
+  }
+  .status{
+    padding: 2px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 128, 0, 0);
+    transition: border 0.3s ease-in;
+  }
+  .status:hover{
+    border: 2px solid rgba(145, 145, 145, 0.646);
+  }
+  #btn-aberto:hover{
+    border: 2px solid green;
+  }
+  #btn-fechado:hover{
+    border: 2px solid red;
+  }
+  #filtroAbertos{
+    border: none;
+  }
+  #filtroFechados{
+    border: none;
   }

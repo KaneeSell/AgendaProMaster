@@ -35,7 +35,7 @@
       </symbol>
     </svg>
     <!-- Botão Tema -->
-    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+    <div id="botaoTema" class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
       <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
       id="bd-theme"
       type="button"
@@ -124,99 +124,193 @@
     </div>
     <!-- Agenda -->
     <div id="divAgenda" class="bg-body-tertiaryp-5 rounded justify-content-center text-center">
-      <h2 class="fs-1 mb-5">Agenda</h2>
-      <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+      <h2 class="fs-1 mb-2">Agenda</h2>
+      <button class="badge text-bg-success rounded-pill" id="filtroAbertos">Abertos</button>
+      <button class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">Abertos</button>
+      <button class="badge text-bg-danger rounded-pill" id="filtroFechados">Fechados</button>
+      <button class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Fechados</button>
+      <!-- Alert -->
+      <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+        <p class="m-1">Nenhum resultado encontrado.</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
+        <p class="m-1">5 resultados encontrados.</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      <div class="bd-heading sticky-xl-top align-self-start mt-3 mb-1 mt-xl-0 mb-xl-2">
+        <div class="spinner-border text-primary m-2" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
         <div>
           <div class="bd-example-snippet bd-code-snippet">
             <div class="bd-example m-0 border-0">
               <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                  <div class="card">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                  <div class="col">
+                    <div class="card">
+                      <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
+                        <div class="eventNumber">
+                          <span class="status bg-success" title="Aberto"></span>
+                          <h5 class="card-title">Evento Exemplo 1</h5>
+                          <div>
+                            <button class="text-success bg-body" id="btn-aberto">✓</button>
+                            <button class="text-danger bg-body" id="btn-fechado">☓</button>
+                          </div>
+                        </div>
+                        <p class="card-text mb-0" id="limiteDescricao">Um exemplo focado na simplicidade e na objetividade, onde o card apresenta apenas texto, priorizando clareza e funcionalidade. </p>
+                        <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
+                        </div>
+                      </div>
+                      <div class="card-footer text-body-secondary mb-0">
+                        <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable" onclick="visualizarEvento(event)">
+                          Visualizar
+                        </button>
+                      </div>
+                      <div class="card-footer text-body-secondary">
+                        1 dias atrás
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col">
-                  <div class="card">
-                    <div class="card-header">
-                      Featured
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                    <div class="card-footer text-body-secondary">
-                      2 days ago
-                    </div>
-                  </div>
-                </div>
-            <div class="col">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">An item</li>
-                  <li class="list-group-item">A second item</li>
-                  <li class="list-group-item">A third item</li>
-                </ul>
-                <div class="card-body">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" class="card-link">Another link</a>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"/><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image</text></svg>
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+
+                  <div class="col">
+                    <div class="card">
+                      <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
+                        <div class="eventNumber">
+                          <span class="status bg-danger" title="Fechado"></span>
+                          <h5 class="card-title">Evento Exemplo 2</h5>
+                          <div>
+                            <button class="text-success bg-body" id="btn-aberto">✓</button>
+                            <button class="text-danger bg-body" id="btn-fechado">☓</button>
+                          </div>
+                        </div>
+                        <p class="card-text mb-0" id="limiteDescricao">Um exemplo focado na simplicidade e na objetividade, onde o card apresenta apenas texto, priorizando clareza e funcionalidade. </p>
+                        <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
+                        </div>
+                      </div>
+                      <div class="card-footer text-body-secondary mb-0">
+                        <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable" onclick="visualizarEvento(event)">
+                          Visualizar
+                        </button>
+                      </div>
+                      <div class="card-footer text-body-secondary">
+                        2 dias atrás
+                      </div>
                     </div>
                   </div>
+
                 </div>
-              </div>
-            </div>
           </div>
           </div>
     </div>
   </div>
-        </div>
-        <div class="col-sm-8 mx-auto justify-content-center align-items-center text-center flex-column flex-wrap" id="divNovoEvento">
-          <h2>Novo Evento</h2>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Nome</span>
-            <input id="inputName" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-          </div>
-          <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
-          <div class="input-group">
-            <textarea id="inputDescricao" cols="30" rows="10" class="form-control" aria-label="With textarea"></textarea>
-          </div>
-          <div class="d-flex align-items-center">
-            <button type="button" class="btn btn-primary m-2">Salvar</button>
-            <button type="button" class="btn btn-danger m-2">Cancelar</button>
-          </div>
-        </div>
-      </div>
+
+  <!-- Novo Evento -->
+  <div class="col-sm-8 mx-auto justify-content-center align-items-center text-center flex-column flex-wrap" id="divNovoEvento">
+    <h2>Novo Evento</h2>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">Nome</span>
+      <input id="inputName" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+    <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
+    <div class="input-group">
+      <textarea id="inputDescricao" cols="30" rows="10" class="form-control" aria-label="With textarea"></textarea>
+    </div>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-primary m-2">Salvar</button>
+      <button type="button" class="btn btn-danger m-2">Cancelar</button>
+    </div>
+  </div>
+  
+  <!-- Paginação -->
+  <div class="bd-example-snippet bd-code-snippet d-flex justify-content-center align-items-center text-align-center">
+    <div class="bd-example m-0 border-0">
+      <nav aria-label="Standard pagination example">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  
+</div>
+</div>
+
       <!-- Configurações -->
       <div id="divConfiguracoes" class="bg-body-tertiaryp-5 rounded">
         <div class="col-sm-8 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap gap-4">
           <h2 >Configurações</h2>
-          <button type="button" class="btn btn-danger">Reset Total</button>
+
+          
+          <div class="mb-3">
+
+            <label for="customRange2" class="form-label" id="maxCaracterDescricao"></label>
+            <input type="range" class="form-range" min="50" max="1000" step="10" id="customRange2" oninput="maxCaracterDescricao(event)">
+            
+            <label for="customRange3" class="form-label" id="maxCaracterNome"></label>
+            <input type="range" class="form-range" min="5" max="100" step="1" id="customRange3" oninput="maxCaracterNome(event)">
+
+          </div>
+
+          <div>
+            <div class="bd-example-snippet bd-code-snippet">
+              <div class="bd-example m-0 border-0 tooltip-demo">
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Restaura somente as configurações, mantendo todos seus eventos salvos">Restaurar Configurações</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="bd-example-snippet bd-code-snippet">
+              <div class="bd-example m-0 border-0 tooltip-demo">
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="limpa todos os dados agenda, mantendo as configurações">Apagar tudo</button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="status bg-success me-2" title="Aberto"></span>
+          <h5 class="card-title">Evento Exemplo Modal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-1">
+          <p>This is some placeholder content to show the scrolling behavior for modals. We use repeated line breaks to demonstrate how content can exceed minimum inner height, thereby showing inner scrolling. When content becomes longer than the predefined max-height of modal, content will be cropped and scrollable within the modal.</p>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <p>Este é o conteúdo no final da rolagem.</p>
+        </div>
+        <div class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-center text-align-center pb-0">
+          <p class="m-1">Salvo com sucesso!</p>
+        </div>
+        <div class="modal-footer d-flex justify-content-center align-items-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary">Editar</button>
+          <button type="button" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-success">Abrir</button>
+          <button type="button" class="btn btn-danger">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/js/color-modes.js"></script>
   <script src="./script.js"></script>
