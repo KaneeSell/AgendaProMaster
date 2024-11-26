@@ -125,10 +125,24 @@
     <!-- Agenda -->
     <div id="divAgenda" class="bg-body-tertiaryp-5 rounded justify-content-center text-center">
       <h2 class="fs-1 mb-2">Agenda</h2>
-      <button class="badge text-bg-success rounded-pill" id="filtroAbertos">Abertos</button>
-      <button class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">Abertos</button>
-      <button class="badge text-bg-danger rounded-pill" id="filtroFechados">Fechados</button>
-      <button class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Fechados</button>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="card-footer text-body-secondary my-1">
+          <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#modalNovoEvento" onclick="btnNovoEvento(event)">
+            Novo
+          </button>
+        </div>
+      </div>
+      <div class="my-3 d-flex flex-row justify-content-center align-items-center text-align-center">
+        <!-- On Aberto -->
+        <button class="badge text-bg-success rounded-pill" id="onFiltroAbertos" onclick="onBtnFiltroAberto(event)">Abertos</button>
+        <!-- Off Aberto -->
+        <button class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" id="offFiltroAbertos" onclick="offBtnFiltroAberto(event)">Abertos</button>
+        <!-- On Fechado -->
+        <button class="badge text-bg-danger rounded-pill" id="onFiltroFechados" onclick="onBtnFiltroFechado(event)">Fechados</button>
+        <!-- Off Fechado -->
+        <button class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill" id="offFiltroFechados" onclick="offBtnFiltroFechado(event)">Fechados</button>
+      </div>
+
       <!-- Alert -->
       <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
         <p class="m-1">Nenhum resultado encontrado.</p>
@@ -146,59 +160,7 @@
         <div>
           <div class="bd-example-snippet bd-code-snippet">
             <div class="bd-example m-0 border-0">
-              <div class="row row-cols-1 row-cols-md-2 g-4">
-
-                  <div class="col">
-                    <div class="card">
-                      <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
-                        <div class="eventNumber">
-                          <span class="status bg-success" title="Aberto"></span>
-                          <h5 class="card-title">Evento Exemplo 1</h5>
-                          <div>
-                            <button class="text-success bg-body" id="btn-aberto">✓</button>
-                            <button class="text-danger bg-body" id="btn-fechado">☓</button>
-                          </div>
-                        </div>
-                        <p class="card-text mb-0" id="limiteDescricao">Um exemplo focado na simplicidade e na objetividade, onde o card apresenta apenas texto, priorizando clareza e funcionalidade. </p>
-                        <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
-                        </div>
-                      </div>
-                      <div class="card-footer text-body-secondary mb-0">
-                        <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable" onclick="visualizarEvento(event)">
-                          Visualizar
-                        </button>
-                      </div>
-                      <div class="card-footer text-body-secondary">
-                        1 dias atrás
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col">
-                    <div class="card">
-                      <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
-                        <div class="eventNumber">
-                          <span class="status bg-danger" title="Fechado"></span>
-                          <h5 class="card-title">Evento Exemplo 2</h5>
-                          <div>
-                            <button class="text-success bg-body" id="btn-aberto">✓</button>
-                            <button class="text-danger bg-body" id="btn-fechado">☓</button>
-                          </div>
-                        </div>
-                        <p class="card-text mb-0" id="limiteDescricao">Um exemplo focado na simplicidade e na objetividade, onde o card apresenta apenas texto, priorizando clareza e funcionalidade. </p>
-                        <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
-                        </div>
-                      </div>
-                      <div class="card-footer text-body-secondary mb-0">
-                        <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable" onclick="visualizarEvento(event)">
-                          Visualizar
-                        </button>
-                      </div>
-                      <div class="card-footer text-body-secondary">
-                        2 dias atrás
-                      </div>
-                    </div>
-                  </div>
+              <div class="row row-cols-1 row-cols-md-2 g-4" id="eventos-painel">
 
                 </div>
           </div>
@@ -206,25 +168,9 @@
     </div>
   </div>
 
-  <!-- Novo Evento -->
-  <div class="col-sm-8 mx-auto justify-content-center align-items-center text-center flex-column flex-wrap" id="divNovoEvento">
-    <h2>Novo Evento</h2>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">Nome</span>
-      <input id="inputName" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-    </div>
-    <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
-    <div class="input-group">
-      <textarea id="inputDescricao" cols="30" rows="10" class="form-control" aria-label="With textarea"></textarea>
-    </div>
-    <div class="d-flex align-items-center">
-      <button type="button" class="btn btn-primary m-2">Salvar</button>
-      <button type="button" class="btn btn-danger m-2">Cancelar</button>
-    </div>
-  </div>
   
   <!-- Paginação -->
-  <div class="bd-example-snippet bd-code-snippet d-flex justify-content-center align-items-center text-align-center">
+  <!-- <div class="bd-example-snippet bd-code-snippet d-flex justify-content-center align-items-center text-align-center">
     <div class="bd-example m-0 border-0">
       <nav aria-label="Standard pagination example">
         <ul class="pagination">
@@ -247,8 +193,9 @@
   </div>
   
 </div>
-</div>
+</div> -->
 
+  </div>
       <!-- Configurações -->
       <div id="divConfiguracoes" class="bg-body-tertiaryp-5 rounded">
         <div class="col-sm-8 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap gap-4">
@@ -262,55 +209,65 @@
             
             <label for="customRange3" class="form-label" id="maxCaracterNome"></label>
             <input type="range" class="form-range" min="5" max="100" step="1" id="customRange3" oninput="maxCaracterNome(event)">
-
+            <button class="btn btn-primary" onclick="salvarConfiguracao(event)">Salvar</button>
           </div>
 
           <div>
             <div class="bd-example-snippet bd-code-snippet">
               <div class="bd-example m-0 border-0 tooltip-demo">
-                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Restaura somente as configurações, mantendo todos seus eventos salvos">Restaurar Configurações</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Restaura somente as configurações, mantendo todos seus eventos salvos" onclick="resetConfiguracoes(event)">Restaurar Configurações</button>
               </div>
             </div>
           </div>
           <div>
             <div class="bd-example-snippet bd-code-snippet">
               <div class="bd-example m-0 border-0 tooltip-demo">
-                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="limpa todos os dados agenda, mantendo as configurações">Apagar tudo</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="limpa todos os dados agenda, mantendo as configurações" onclick="apagarTudo(event)">Apagar tudo</button>
               </div>
             </div>
           </div>
 
         </div>
       </div>
-  </div>
-  <!-- Modal -->
+  <!-- Modal Visualizar Evento -->
   <div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="status bg-success me-2" title="Aberto"></span>
-          <h5 class="card-title">Evento Exemplo Modal</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body pt-1">
-          <p>This is some placeholder content to show the scrolling behavior for modals. We use repeated line breaks to demonstrate how content can exceed minimum inner height, thereby showing inner scrolling. When content becomes longer than the predefined max-height of modal, content will be cropped and scrollable within the modal.</p>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <p>Este é o conteúdo no final da rolagem.</p>
-        </div>
-        <div class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-center text-align-center pb-0">
-          <p class="m-1">Salvo com sucesso!</p>
-        </div>
-        <div class="modal-footer d-flex justify-content-center align-items-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-          <button type="button" class="btn btn-primary">Editar</button>
-          <button type="button" class="btn btn-primary">Salvar</button>
-          <button type="button" class="btn btn-success">Abrir</button>
-          <button type="button" class="btn btn-danger">Fechar</button>
-        </div>
+      <div class="modal-content" id="conteudoModal">
       </div>
     </div>
   </div>
+
+  <!-- Modal Novo Evento -->
+  <div class="modal fade" id="modalNovoEvento" tabindex="-1" aria-labelledby="modalNovoEventoTittle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" id="modalSheet">
+      <div class="modal-content" role="document">
+          <div class="modal-header border-bottom-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento(event)"></button>
+          </div>
   
+          <form onsubmit="salvarNovoEvento(event)" class="col-sm-9 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap " id="divNovoEvento">
+            <h2>Novo Evento</h2>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">Nome</span>
+              <input id="inputName" type="text" class="form-control" placeholder="Nome Evento" aria-label="Username" aria-describedby="basic-addon1" autocomplete="off" required>
+            </div>
+            <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
+            <div class="input-group">
+              <textarea id="inputDescricao" autocomplete="off" cols="30" rows="10" class="form-control" aria-label="With textarea" required></textarea>
+            </div>
+            <div class="list-group-item list-group-item-action list-group-item-success justify-content-center text-align-center pb-1 mt-2" id="alertEventoSalvo">
+              <p class="m-1">Salvo com sucesso!</p>
+            </div>
+            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+              <button type="submit" class="btn btn-lg btn-primary">Salvar</button>
+              <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)">Cancelar</button>
+            </div>
+          </form>
+  
+        
+      </div>
+    </div>
+  </div>
   <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/js/color-modes.js"></script>
   <script src="./script.js"></script>

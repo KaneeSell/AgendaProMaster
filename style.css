@@ -82,8 +82,19 @@
   }
   #divConfiguracoes,
   #divAgenda,
-  #divNovoEvento{
+  #alertEventoSalvo,
+  #alertEventoSalvo2,
+  #offFiltroFechados,
+  #offFiltroAbertos,
+  #alertEventoMaximoCaracter,
+  #alertConfigAlerta{
     display: none;
+  }
+  .cursor-none{
+    cursor: default !important;
+  }
+  .ms-4-5 {
+    margin-left: 2.2rem !important;
   }
   .eventNumber{
     display: flex;
@@ -93,7 +104,7 @@
     gap: 10px;
   }
   .status{
-    padding: 2px;
+    padding: 3px;
     border-radius: 50%;
     border: 2px solid rgba(0, 128, 0, 0);
     transition: border 0.3s ease-in;
