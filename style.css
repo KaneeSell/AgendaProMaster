@@ -85,7 +85,10 @@
   #alertEventoSalvo,
   #alertEventoSalvo2,
   #offFiltroFechados,
+  #divErroResultado,
+  #onfFiltroFechados,
   #offFiltroAbertos,
+  #onFiltroAberto,
   #alertEventoMaximoCaracter,
   #alertConfigAlerta{
     display: none;

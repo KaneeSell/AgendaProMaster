@@ -130,9 +130,10 @@
           <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#modalNovoEvento" onclick="btnNovoEvento(event)">
             Novo
           </button>
+          <button type="button" class="btn btn-primary" onclick="atualizarEventos()">Atualizar</button>
         </div>
       </div>
-      <div class="my-3 d-flex flex-row justify-content-center align-items-center text-align-center">
+      <div class="my-3 d-flex flex-row flex-wrap justify-content-center align-items-center text-align-center gap-1">
         <!-- On Aberto -->
         <button class="badge text-bg-success rounded-pill" id="onFiltroAbertos" onclick="onBtnFiltroAberto(event)">Abertos</button>
         <!-- Off Aberto -->
@@ -144,19 +145,25 @@
       </div>
 
       <!-- Alert -->
-      <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+      <div id="divErroResultado" class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+        <p class="m-1">Erro ao carregar Eventos.</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div id="divNenhumResultado" class="alert alert-danger alert-dismissible fade show my-2" role="alert">
         <p class="m-1">Nenhum resultado encontrado.</p>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
-        <p class="m-1">5 resultados encontrados.</p>
+      <div id="divResultadoEncontrado" class="alert alert-success alert-dismissible fade show my-2" role="alert">
+        <p id="pResultadoEncontrado" class="m-1">5 resultados encontrados.</p>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <div id="divLoading" class="spinner-border text-primary m-2 justify-content-center align-items-center" role="status">
+          <span id="spanLoading" class="visually-hidden justify-content-center align-items-center">Loading...</span>
+        </div>
       </div>
 
       <div class="bd-heading sticky-xl-top align-self-start mt-3 mb-1 mt-xl-0 mb-xl-2">
-        <div class="spinner-border text-primary m-2" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
         <div>
           <div class="bd-example-snippet bd-code-snippet">
             <div class="bd-example m-0 border-0">

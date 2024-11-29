@@ -3,7 +3,6 @@ verificarLocalStorage()
 maxCaracterNome(false, localStorage.getItem('maxNome'))
 maxCaracterDescricao(false, localStorage.getItem('maxDescricao'))
 verificaEventoVazio()
-atualizarEventos()
 // Declarando constantes
 const barNavegacao = document.getElementById('barNavegacao');
 const divBemVindo = document.getElementById('divBemVindo')
@@ -12,7 +11,32 @@ const divConfiguracoes = document.getElementById('divConfiguracoes')
 const liBemVindo = document.getElementsByClassName('nav-link')[0]
 const liAgenda = document.getElementsByClassName('nav-link')[1]
 const liConfiguracoes = document.getElementsByClassName('nav-link')[2]
+const onfiltroAbertos = document.getElementById('onFiltroAbertos')
+const offFiltroAbertos = document.getElementById('offFiltroAbertos')
+const onFiltroFechados = document.getElementById('onFiltroFechados')
+const offFiltroFechados = document.getElementById('offFiltroFechados')
 
+function verificaAbertoFechado(){
+    const localStorageAbertos = localStorage.getItem('abertos')
+    const localStorageFechados = localStorage.getItem('fechados')
+    if(localStorageAbertos && localStorageFechados){
+        if(localStorageAbertos == 'true'){
+            offBtnFiltroAberto()
+        } else{
+            onBtnFiltroAberto()
+        }
+        if(localStorageFechados == 'true'){
+            offBtnFiltroFechado()
+        } else{
+            onBtnFiltroFechado()
+        }
+    } else{
+        offBtnFiltroAberto()
+        offBtnFiltroFechado()
+        atualizarEventos()
+    }
+}
+verificaAbertoFechado()
 // Funções
 function retornoEventos(){
     return JSON.parse(localStorage.getItem('eventos'))
@@ -55,6 +79,7 @@ function linkAgenda(){
     divAgenda.style.display = 'block'
     divBemVindo.style.display = 'none'
     divConfiguracoes.style.display = 'none'
+    atualizarEventos()
 }
 function linkConfiguracoes(){
     hideBarNavegacao(liConfiguracoes, liBemVindo, liAgenda)
@@ -115,50 +140,53 @@ document.querySelectorAll('.toast')
 // Constantes Agenda
 const inputName = document.getElementById('inputName')
 const inputDescricao = document.getElementById('inputDescricao')
-const onfiltroAbertos = document.getElementById('onFiltroAbertos')
-const offFiltroAbertos = document.getElementById('offFiltroAbertos')
-const onFiltroFechados = document.getElementById('onFiltroFechados')
-const offFiltroFechados = document.getElementById('offFiltroFechados')
 // Funções Agenda
 function btnNovoEvento(e){
     if(e){
-        e.preventDefault
+        e.preventDefault();
     }
     inputName.maxLength = localStorage.getItem('maxNome')
     inputDescricao.maxLength = localStorage.getItem('maxDescricao')
     }
 function onBtnFiltroAberto(e = false){
     if(e){
-        e.preventDefault
+        e.preventDefault();
     }
     onfiltroAbertos.style.display = 'none'
     offFiltroAbertos.style.display = 'block'
+    localStorage.setItem('abertos', false)
+    atualizarEventos()
 }
 function offBtnFiltroAberto(e = false){
     if(e){
-        e.preventDefault
+        e.preventDefault();
     }
     onfiltroAbertos.style.display = 'block'
     offFiltroAbertos.style.display = 'none'
+    localStorage.setItem('abertos', true)
+    atualizarEventos()
 }
 function onBtnFiltroFechado(e = false){
     if(e){
-        e.preventDefault
+        e.preventDefault();
     }
     onFiltroFechados.style.display = 'none'
     offFiltroFechados.style.display = 'block'
+    localStorage.setItem('fechados', false)
+    atualizarEventos()
 }
 function offBtnFiltroFechado(e = false){
     if(e){
-        e.preventDefault
+        e.preventDefault();
     }
     onFiltroFechados.style.display = 'block'
     offFiltroFechados.style.display = 'none'
+    localStorage.setItem('fechados', true)
+    atualizarEventos()
 }
 function criarDivEvento(id, nome, descricao, status, datacriacao){
-    document.getElementById('eventos-painel').style.display = 'flex'
     const eventosPainel = document.getElementById('eventos-painel')
-    eventosPainel.innerHTML = `
+    return `
                     <div class="col">
                     <div class="card">
                       <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
@@ -359,7 +387,19 @@ function salvarEditadoEvento(id, nome, descricao, status, datacriacao){
         alertEventoSalvo.style.display = 'none'
     }, 3000)
 }
+
+async function atualizarEventos() {
+    try {
+        await executarAtualizacao(); // Aguarda a função assíncrona
+    } catch (error) {
+        console.error("Erro durante a atualização:", error);
+    } finally {
+        divLoading.style.display = 'none'; // Oculta o loading quando terminar
+    }
+}
+
 function salvarNovoEvento(e = false){
+    
     if(e){
         e.preventDefault()
     }
@@ -388,13 +428,55 @@ function salvarNovoEvento(e = false){
         alertEventoSalvo.style.display = 'none'
     }, 1300)
 }
-function atualizarEventos(){
+function executarAtualizacao(){
+    return new Promise(resolve => {
+        const divLoading = document.getElementById('divLoading');
+        if (divLoading) divLoading.style.display = 'flex';
+        setTimeout(() => {
     const eventos = retornoEventos()
     const conteudoModal = document.getElementById('conteudoModal') 
+    const eventosPainel = document.getElementById('eventos-painel')
+    const divNenhumResultado = document.getElementById('divNenhumResultado')
+    const divResultadoEncontrado = document.getElementById('divResultadoEncontrado')
+    const pResultadoEncontrado = document.getElementById('pResultadoEncontrado')
+    const abertos = onfiltroAbertos.style.display == 'block'? true:false
+    const fechados = onFiltroFechados.style.display == 'block'? true:false
+    document.getElementById('eventos-painel').style.display = 'flex'
     conteudoModal.innerHTML = ''
+    let divEventos = ''
+    let resultado = 0
     for(let i = 0; i < eventos.length; i++){
-        criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao)
+        if(abertos == true && eventos[i].status == true){
+            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao)
+            resultado++
+        }
+        if(fechados == true && eventos[i].status == false){
+            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao)
+            resultado++
+        }
     }
+    if(resultado == 0){
+        divNenhumResultado.style.display = 'block'
+        divResultadoEncontrado.style.display = 'none'
+        divLoading.style.display = 'none'
+        // setTimeout(()=>{
+            //     divNenhumResultado.style.display = 'none'
+            // }, 2000)
+        } else{
+            divNenhumResultado.style.display = 'none'
+            divResultadoEncontrado.style.display = 'block'
+            pResultadoEncontrado.innerText = `${resultado} Resultados encontrados.`
+            divLoading.style.display = 'none'
+            // setTimeout(()=>{
+                //     divResultadoEncontrado.style.display = 'none'
+                // }, 2000)
+            }
+    eventosPainel.innerHTML = divEventos
+    divLoading.style.display = 'none'; // Oculta o indicador de carregamento
+
+    resolve(); // Resolve a Promise após o processamento
+}, 0); // Simulação de carregamento
+});
 }
 function cancelarNovoEvento(e = false){
     if(e){
@@ -420,6 +502,8 @@ function resetConfiguracoes(id){
     const eventos = JSON.parse(localStorage.getItem("eventos"))
     localStorage.setItem(`edit`, id)
     atualizaStorage(eventos[id].nome, eventos[id].descricao)
+    offBtnFiltroAberto()
+    offBtnFiltroFechado()
     atualizarEventos();
 }
 function resetConfiguracoes(e = false){
