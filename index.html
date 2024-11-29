@@ -74,7 +74,7 @@
   <div class="container">
     <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Eleventh navbar example">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">AgendaProMaster</a>
+        <a id="titleAgendaProMaster" class="navbar-brand" href="#">AgendaProMaster</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#barNavegacao" aria-controls="barNavegacao" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -233,14 +233,19 @@
           <h2 >Configurações</h2>
 
           
-          <div class="mb-3">
-
+          <div class="d-flex flex-column flex-wrap justify-content-center align-items-center col-sm-8 gap-4">
+            <div class="d-flex justify-content-center align-items-center gap-5 form-switch">
+              <label class="form-check-label" for="FecharAposSalvar">Fechar tela Após Salvar</label>
+              <input class="form-check-input" type="checkbox" id="FecharAposSalvar">
+            </div>
             <label for="customRange2" class="form-label" id="maxCaracterDescricao"></label>
             <input type="range" class="form-range" min="50" max="1000" step="10" id="customRange2" oninput="maxCaracterDescricao(event)">
-            
             <label for="customRange3" class="form-label" id="maxCaracterNome"></label>
             <input type="range" class="form-range" min="5" max="100" step="1" id="customRange3" oninput="maxCaracterNome(event)">
-            <button class="btn btn-primary" onclick="salvarConfiguracao(event)">Salvar</button>
+            <button class="btn btn-primary" onclick="salvarConfiguracao(event)">
+              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M816-672v456q0 29.7-21.15 50.85Q773.7-144 744-144H216q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h456l144 144Zm-72 30L642-744H216v528h528v-426ZM480-252q45 0 76.5-31.5T588-360q0-45-31.5-76.5T480-468q-45 0-76.5 31.5T372-360q0 45 31.5 76.5T480-252ZM264-552h336v-144H264v144Zm-48-77v413-528 115Z"/></svg>
+              Salvar
+            </button>
           </div>
 
           <div>
@@ -273,7 +278,7 @@
     <div class="modal-dialog modal-dialog-centered" tabindex="-1" role="dialog" id="modalSheet">
       <div class="modal-content" role="document">
           <div class="modal-header border-bottom-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento()"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento()" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
   
           <form onsubmit="salvarNovoEvento(event)" class="col-sm-9 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap " id="divNovoEvento">
@@ -290,8 +295,11 @@
               <p class="m-1">Salvo com sucesso!</p>
             </div>
             <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
-              <button type="submit" class="btn btn-lg btn-primary" class="btn-close" data-bs-dismiss="modal" aria-label="Close" >Salvar</button>
-              <button type="button" class="btn btn-lg btn-danger" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento(event)">Cancelar</button>
+              <button type="submit" class="btn btn-lg btn-primary" class="btn-close">
+                <svg class="mb-1 text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M816-672v456q0 29.7-21.15 50.85Q773.7-144 744-144H216q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h456l144 144Zm-72 30L642-744H216v528h528v-426ZM480-252q45 0 76.5-31.5T588-360q0-45-31.5-76.5T480-468q-45 0-76.5 31.5T372-360q0 45 31.5 76.5T480-252ZM264-552h336v-144H264v144Zm-48-77v413-528 115Z"/></svg>
+                Salvar
+              </button>
+              <button type="button" class="btn btn-lg btn-danger" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento(event)" onclick="document.getElementById('titleAgendaProMaster').focus()">Cancelar</button>
             </div>
           </form>
   

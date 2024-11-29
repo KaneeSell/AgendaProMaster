@@ -3,6 +3,7 @@ verificarLocalStorage()
 maxCaracterNome(false, localStorage.getItem('maxNome'))
 maxCaracterDescricao(false, localStorage.getItem('maxDescricao'))
 verificaEventoVazio()
+verificarFecharAposSalvar()
 // Declarando constantes
 const barNavegacao = document.getElementById('barNavegacao');
 const divBemVindo = document.getElementById('divBemVindo')
@@ -16,6 +17,12 @@ const offFiltroAbertos = document.getElementById('offFiltroAbertos')
 const onFiltroFechados = document.getElementById('onFiltroFechados')
 const offFiltroFechados = document.getElementById('offFiltroFechados')
 
+function verificarFecharAposSalvar(){
+    const fecharAposSalvar = localStorage.getItem('fecharAposSalvar')
+    if(!fecharAposSalvar){
+        localStorage.setItem('fecharAposSalvar', true)
+    }
+}
 function verificaAbertoFechado(){
     const localStorageAbertos = localStorage.getItem('abertos')
     const localStorageFechados = localStorage.getItem('fechados')
@@ -82,12 +89,18 @@ function linkAgenda(){
     atualizarEventos()
 }
 function linkConfiguracoes(){
+    const FecharAposSalvar = localStorage.getItem('fecharAposSalvar')
     hideBarNavegacao(liConfiguracoes, liBemVindo, liAgenda)
     divAgenda.style.display = 'none'
     divBemVindo.style.display = 'none'
     divConfiguracoes.style.display = 'flex'
     maxCaracterNome(false, localStorage.getItem('maxNome'))
     maxCaracterDescricao(false, localStorage.getItem('maxDescricao'))
+    if(FecharAposSalvar == 'true'){
+        document.getElementById('FecharAposSalvar').checked = true
+    } else{
+        document.getElementById('FecharAposSalvar').checked = false
+    }
 }
 // Funções de configurações
 function maxCaracterDescricao(e = false, maxDescricao = false){
@@ -97,10 +110,10 @@ function maxCaracterDescricao(e = false, maxDescricao = false){
     const inputMaxCaracterDescricao = document.getElementById('customRange2')
     const labelmaxCaracterDescricao = document.getElementById('maxCaracterDescricao')
     if(maxDescricao){
-        labelmaxCaracterDescricao.innerText = `Máximo caracteres Descrição ${maxDescricao}`
+        labelmaxCaracterDescricao.innerHTML = `Máximo caracteres Descrição <code class="fs-6">${maxDescricao}</code>`
         inputMaxCaracterDescricao.value = maxDescricao
     } else{
-        labelmaxCaracterDescricao.innerText = `Máximo caracteres Descrição ${inputMaxCaracterDescricao.value}`
+        labelmaxCaracterDescricao.innerHTML = `Máximo caracteres Descrição <code class="fs-6">${inputMaxCaracterDescricao.value}</code>`
     }
 }
 function maxCaracterNome(e = false, maxNome = false){
@@ -110,10 +123,10 @@ function maxCaracterNome(e = false, maxNome = false){
     const inputMaxCaracterNome = document.getElementById('customRange3')
     const labelmaxCaracterNome = document.getElementById('maxCaracterNome')
     if(maxNome){
-    labelmaxCaracterNome.innerText = `Máximo caracteres nome ${maxNome}`
+    labelmaxCaracterNome.innerHTML = `Máximo caracteres nome <code class="fs-6">${maxNome}</code>`
     inputMaxCaracterNome.value = maxNome
     } else{
-        labelmaxCaracterNome.innerText = `Máximo caracteres nome ${inputMaxCaracterNome.value}`
+        labelmaxCaracterNome.innerHTML = `Máximo caracteres nome <code class="fs-6">${inputMaxCaracterNome.value}</code>`
     }
 }
 // Tooltip and popover demos
@@ -210,7 +223,7 @@ function criarDivEvento(id, nome, descricao, status, datacriacao){
                             Visualizar
                         </button>
                       </div>
-                      <div class="card-footer text-body-secondary">
+                      <div class="card-footer text-body-secondary d-flex justify-content-center align-items-center p-0">
                         <p>
                         ${datacriacao}
                         </p>
@@ -235,7 +248,7 @@ function visualizarEvento(e = false, id){
           <span class="status bg-${status?'success':'danger'}" title="${status?'Aberto':'Fechado'}"></span>
           <p class="m-1 ms-4 btn btn-secondary cursor-none">${id}</p>
           <h5 class="card-title fs-1 ms-3" id="h5Nome">${nome}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
           <p class="m-0 p-0">Data de Criação: ${datacriacao}</p>
@@ -250,7 +263,7 @@ function visualizarEvento(e = false, id){
           <p class="m-1">Salvo com sucesso!</p>
         </div>
         <div class="modal-footer d-flex justify-content-center align-items-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()">
           <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
           Fechar</button>
           <button type="button" class="btn btn-primary" onclick="editarEvento(event, ${id})">
@@ -277,6 +290,7 @@ function salvarEdicaoEvento(e = false, id){
     const descricao = document.getElementById('preDescricao').innerText
     const conteudoModal = document.getElementById('conteudoModal') 
     salvarEditadoEvento(id, nome, descricao, status, datacriacao)
+    visualizarEvento(false, id)
 }
 function editarEvento(e = false, id){
     if(e){
@@ -313,8 +327,8 @@ function editarEvento(e = false, id){
           <button type="button" class="btn btn-danger" onclick="cancelarEdicaoEvento(event, ${id})">
           <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q55 0 104-18t89-50L236-673q-32 40-50 89t-18 104q0 130 91 221t221 91Zm244-119q32-40 50-89t18-104q0-130-91-221t-221-91q-55 0-104 18t-89 50l437 437Z"/></svg>
           Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="salvarEdicaoEvento(event, ${id})" data-bs-dismiss="modal" aria-label="Close">
-          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-312q70 0 119-49t49-119q0-70-49-119t-119-49q-70 0-119 49t-49 119q0 70 49 119t119 49Zm0-72q-40 0-68-28t-28-68q0-40 28-68t68-28q40 0 68 28t28 68q0 40-28 68t-68 28Zm0 192q-142.6 0-259.8-78.5Q103-349 48-480q55-131 172.2-209.5Q337.4-768 480-768q142.6 0 259.8 78.5Q857-611 912-480q-55 131-172.2 209.5Q622.6-192 480-192Zm0-288Zm0 216q112 0 207-58t146-158q-51-100-146-158t-207-58q-112 0-207 58T127-480q51 100 146 158t207 58Z"/></svg>
+          <button type="button" class="btn btn-primary" onclick="salvarEdicaoEvento(event, ${id})">
+          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M816-672v456q0 29.7-21.15 50.85Q773.7-144 744-144H216q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h456l144 144Zm-72 30L642-744H216v528h528v-426ZM480-252q45 0 76.5-31.5T588-360q0-45-31.5-76.5T480-468q-45 0-76.5 31.5T372-360q0 45 31.5 76.5T480-252ZM264-552h336v-144H264v144Zm-48-77v413-528 115Z"/></svg>
           Salvar</button>
         </div>
     `
@@ -414,10 +428,11 @@ async function atualizarEventos() {
 }
 
 function salvarNovoEvento(e = false){
-    
     if(e){
         e.preventDefault()
     }
+    const modalNovoEvento = document.getElementById('modalNovoEvento');
+    const fecharAposSalvar = localStorage.getItem('fecharAposSalvar')
     const alertEventoSalvo = document.getElementById('alertEventoSalvo')
     const nome = inputName.value
     const descricao = inputDescricao.value
@@ -442,11 +457,17 @@ function salvarNovoEvento(e = false){
     setTimeout(()=>{
         alertEventoSalvo.style.display = 'none'
     }, 1300)
+    if(fecharAposSalvar == 'true'){
+        document.getElementById('titleAgendaProMaster').focus()
+        document.querySelector('[data-bs-dismiss="modal"]').click();
+    }
 }
 function executarAtualizacao(){
     return new Promise(resolve => {
         const divLoading = document.getElementById('divLoading');
-        if (divLoading) divLoading.style.display = 'flex';
+        if (divLoading){
+            divLoading.style.display = 'flex';
+        } 
         setTimeout(() => {
     const eventos = retornoEventos()
     const conteudoModal = document.getElementById('conteudoModal') 
@@ -457,7 +478,7 @@ function executarAtualizacao(){
     const abertos = onfiltroAbertos.style.display == 'flex'? true:false
     const fechados = onFiltroFechados.style.display == 'flex'? true:false
     document.getElementById('eventos-painel').style.display = 'flex'
-    conteudoModal.innerHTML = ''
+    // conteudoModal.innerHTML = ''
     let divEventos = ''
     let resultado = 0
     for(let i = 0; i < eventos.length; i++){
@@ -505,13 +526,15 @@ function cancelarNovoEvento(e = false){
 // Constantes Configurações
     const inputMaxCaracterNome = document.getElementById('customRange3')
     const inputMaxCaracterDescricao = document.getElementById('customRange2')
-// Funções Configurações
-function salvarConfiguracao(e = false){
-    if(e){
-        e.preventDefault();
-    }
-    localStorage.setItem('maxNome', inputMaxCaracterNome.value)
-    localStorage.setItem('maxDescricao', inputMaxCaracterDescricao.value)
+    // Funções Configurações
+    function salvarConfiguracao(e = false){
+        if(e){
+            e.preventDefault();
+        }
+        const FecharAposSalvar = document.getElementById('FecharAposSalvar').checked? true: false
+        localStorage.setItem('maxNome', inputMaxCaracterNome.value)
+        localStorage.setItem('maxDescricao', inputMaxCaracterDescricao.value)
+        localStorage.setItem('fecharAposSalvar', FecharAposSalvar)
 }
 function resetConfiguracoes(id){
     const eventos = JSON.parse(localStorage.getItem("eventos"))
@@ -527,8 +550,8 @@ function resetConfiguracoes(e = false){
     }
     localStorage.setItem('maxNome', 30)
     localStorage.setItem('maxDescricao', 300)
-    maxCaracterNome(false, localStorage.getItem('maxNome'))
-    maxCaracterDescricao(false, localStorage.getItem('maxDescricao'))
+    localStorage.setItem('fecharAposSalvar', true)
+    linkConfiguracoes()
 }
 function apagarTudo(e){
     if(e){
