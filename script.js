@@ -436,7 +436,7 @@ function salvarEditadoEvento(id, nome, descricao, status, datacriacao, dataEvent
         if(alertEventoSalvo){
             alertEventoSalvo.style.display = 'flex'
         }
-    }, 0)
+    }, 300)
     setTimeout(()=>{
         const alertEventoSalvo = document.getElementById('alertEventoSalvo2')
         if(alertEventoSalvo){
