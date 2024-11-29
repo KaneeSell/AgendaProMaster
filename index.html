@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./node_modules/flatpickr/dist/flatpickr.min.css">
     <!-- Custom styles for this template -->
     <link href="./navbars.css" rel="stylesheet">
   </head>
@@ -280,12 +281,15 @@
           <div class="modal-header border-bottom-0">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onsubmit="cancelarNovoEvento()" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
-  
-          <form onsubmit="salvarNovoEvento(event)" class="col-sm-9 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap " id="divNovoEvento">
+          <form onsubmit="salvarNovoEvento(event)" class="col-sm-9 mx-auto d-flex justify-content-center align-items-center text-center flex-column flex-wrap gap-1" id="divNovoEvento">
             <h2>Novo Evento</h2>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1">Nome</span>
               <input id="inputName" type="text" class="form-control" placeholder="Nome Evento" aria-label="Username" aria-describedby="basic-addon1" autocomplete="off" required>
+            </div>
+            <div class="input-group">
+              <span class="input-group-text" for="dataPicker">Data</span>
+              <input type="text" id="datePicker" class="form-control" required>
             </div>
             <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
             <div class="input-group">
@@ -309,6 +313,7 @@
   </div>
   <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/js/color-modes.js"></script>
+  <script src="./node_modules/flatpickr/dist/flatpickr.min.js"></script>
   <script src="./script.js"></script>
 </body>
 </html>

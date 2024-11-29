@@ -44,6 +44,26 @@ function verificaAbertoFechado(){
     }
 }
 verificaAbertoFechado()
+// Data Flatpickr
+flatpickr('#datePicker', {
+    enableTime: true,
+    dateFormat: "d/m/Y H:i",
+    defaultDate: dataAtual()+' '+horaAtual(),
+})
+function dataAtual(){
+    const data = new Date()
+    const dia = data.getDate()+1
+    const mes = data.getMonth()+1
+    const ano = data.getFullYear()
+    return `${dia}/${mes}/${ano}`
+}
+function horaAtual(){
+    const data = new Date()
+    const hora = data.getHours()
+    const min = data.getMinutes()
+    return `${hora}:${min}`
+}
+console.log(dataAtual())
 // Funções
 function retornoEventos(){
     return JSON.parse(localStorage.getItem('eventos'))
@@ -197,7 +217,7 @@ function offBtnFiltroFechado(e = false){
     localStorage.setItem('fechados', true)
     atualizarEventos()
 }
-function criarDivEvento(id, nome, descricao, status, datacriacao){
+function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
     const eventosPainel = document.getElementById('eventos-painel')
     return `
                     <div class="col">
@@ -225,7 +245,12 @@ function criarDivEvento(id, nome, descricao, status, datacriacao){
                       </div>
                       <div class="card-footer text-body-secondary d-flex justify-content-center align-items-center p-0">
                         <p>
-                        ${datacriacao}
+                        Data do Evento: <code class="fs-6">${dataevento}</code>
+                        </p>
+                        </div>
+                        <div class="card-footer text-body-secondary d-flex justify-content-center align-items-center p-0">
+                        <p>
+                        Data de Criação: <code class="fs-6">${datacriacao}</code>
                         </p>
                       </div>
                     </div>
@@ -241,7 +266,7 @@ function visualizarEvento(e = false, id){
     const nome = eventos[id].nome
     const descricao = eventos[id].descricao
     const status = eventos[id].status
-    const datacriacao = eventos[id].datacriacao
+    const dataEvento = eventos[id].dataevento
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
@@ -251,7 +276,7 @@ function visualizarEvento(e = false, id){
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
-          <p class="m-0 p-0">Data de Criação: ${datacriacao}</p>
+          <p class="m-0 p-0">Data do Evento: <code class="fs-6">${dataEvento}</code></p>
         </div>
           <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-2" id="preDescricao">
           ${descricao}
@@ -286,10 +311,11 @@ function salvarEdicaoEvento(e = false, id){
     const eventos = retornoEventos()
     const nome = document.getElementById('h5Nome').innerText
     const datacriacao = eventos[id].datacriacao
+    const dataEvento = eventos[id].dataevento
     const status = eventos[id].status
     const descricao = document.getElementById('preDescricao').innerText
     const conteudoModal = document.getElementById('conteudoModal') 
-    salvarEditadoEvento(id, nome, descricao, status, datacriacao)
+    salvarEditadoEvento(id, nome, descricao, status, datacriacao, dataEvento)
     visualizarEvento(false, id)
 }
 function editarEvento(e = false, id){
@@ -300,7 +326,7 @@ function editarEvento(e = false, id){
     const nome = eventos[id].nome
     const descricao = eventos[id].descricao
     const status = eventos[id].status
-    const datacriacao = eventos[id].datacriacao
+    const dataEvento = eventos[id].dataevento
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
@@ -311,7 +337,7 @@ function editarEvento(e = false, id){
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
-          <p class="m-0 p-0">Data de Criação: ${datacriacao}</p>
+          <p class="m-0 p-0">Data do Evento: <code class="fs-6">${dataEvento}</code></p>
         </div>
           <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
           <pre contenteditable="true" style="font-family: inherit;white-space: pre-line; word-wrap: break-word; border: 1px solid #ccc; padding: 10px;" class="modal-body pt-1 fs-2" id="preDescricao" oninput="limiteCaracterPre(event)">
@@ -379,8 +405,9 @@ function restaurarEvento(e = false, id){
     const nome = eventos[id].nome
     const descricao = eventos[id].descricao
     const datacriacao = eventos[id].datacriacao
+    const dataEvento = eventos[id].dataevento
     const status = true
-    eventos[id] = ({'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao})
+    eventos[id] = ({'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao, 'dataevento': dataEvento})
     localStorage.setItem('eventos', JSON.stringify(eventos))
     atualizarEventos()
 }
@@ -392,14 +419,15 @@ function desativarEvento(e = false, id){
     const nome = eventos[id].nome
     const descricao = eventos[id].descricao
     const datacriacao = eventos[id].datacriacao
+    const dataEvento = eventos[id].dataevento
     const status = false
-    eventos[id] = ({'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao})
+    eventos[id] = ({'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao, 'dataevento': dataEvento})
     localStorage.setItem('eventos', JSON.stringify(eventos))
     atualizarEventos()
 }
-function salvarEditadoEvento(id, nome, descricao, status, datacriacao){
+function salvarEditadoEvento(id, nome, descricao, status, datacriacao, dataEvento){
     const eventos = retornoEventos()
-    eventos[id] = {'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao}
+    eventos[id] = {'id': id,'nome': nome, 'descricao': descricao, 'status': status, 'datacriacao': datacriacao, 'dataevento': dataEvento}
     localStorage.setItem('eventos', JSON.stringify(eventos))
     atualizarEventos()
     visualizarEvento(false, id)
@@ -431,11 +459,11 @@ function salvarNovoEvento(e = false){
     if(e){
         e.preventDefault()
     }
-    const modalNovoEvento = document.getElementById('modalNovoEvento');
     const fecharAposSalvar = localStorage.getItem('fecharAposSalvar')
     const alertEventoSalvo = document.getElementById('alertEventoSalvo')
     const nome = inputName.value
     const descricao = inputDescricao.value
+    const dataEvento = document.getElementById('datePicker')
     verificaEventoVazio()
     const eventos = retornoEventos()
     const data = new Date()
@@ -443,10 +471,10 @@ function salvarNovoEvento(e = false){
     const mes = data.getMonth()+1 < 10? `0${data.getMonth()+1}`: `${data.getMonth()+1}`
     const ano = data.getFullYear()
     if(eventos.length == 0){
-        localStorage.setItem('eventos', JSON.stringify([{'id': 0,'nome': nome, 'descricao': descricao, 'status': true, 'datacriacao': `${dia}/${mes}/${ano}`}]))
+        localStorage.setItem('eventos', JSON.stringify([{'id': 0,'nome': nome, 'descricao': descricao, 'status': true, 'datacriacao': `${dataAtual()} ${horaAtual()}`, 'dataevento': dataEvento.value}]))
     } else{
         const id = eventos.length
-        eventos.push({'id': id,'nome': nome, 'descricao': descricao, 'status': true, 'datacriacao': `${dia}/${mes}/${ano}`})
+        eventos.push({'id': id,'nome': nome, 'descricao': descricao, 'status': true, 'datacriacao': `${dataAtual()} ${horaAtual()}`, 'dataevento': dataEvento.value})
         localStorage.setItem('eventos', JSON.stringify(eventos))
     }
     atualizarEventos()
@@ -483,11 +511,11 @@ function executarAtualizacao(){
     let resultado = 0
     for(let i = 0; i < eventos.length; i++){
         if(abertos == true && eventos[i].status == true){
-            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao)
+            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao, eventos[i].dataevento)
             resultado++
         }
         if(fechados == true && eventos[i].status == false){
-            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao)
+            divEventos += criarDivEvento(eventos[i].id, eventos[i].nome, eventos[i].descricao, eventos[i].status, eventos[i].datacriacao, eventos[i].dataevento)
             resultado++
         }
     }

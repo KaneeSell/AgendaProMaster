@@ -132,4 +132,5 @@
   }
   .svg-outline-danger{
     color: var(--bs-danger-text-emphasis) !important;
+    justify-content: space-between;
   }
