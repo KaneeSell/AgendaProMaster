@@ -127,3 +127,9 @@
   #filtroFechados{
     border: none;
   }
+  .svgIcoSuccess{
+    color: var(--bs-success-text-emphasis) !important;
+  }
+  .svg-outline-danger{
+    color: var(--bs-danger-text-emphasis) !important;
+  }

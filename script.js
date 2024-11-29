@@ -153,7 +153,7 @@ function onBtnFiltroAberto(e = false){
         e.preventDefault();
     }
     onfiltroAbertos.style.display = 'none'
-    offFiltroAbertos.style.display = 'block'
+    offFiltroAbertos.style.display = 'flex'
     localStorage.setItem('abertos', false)
     atualizarEventos()
 }
@@ -161,7 +161,7 @@ function offBtnFiltroAberto(e = false){
     if(e){
         e.preventDefault();
     }
-    onfiltroAbertos.style.display = 'block'
+    onfiltroAbertos.style.display = 'flex'
     offFiltroAbertos.style.display = 'none'
     localStorage.setItem('abertos', true)
     atualizarEventos()
@@ -171,7 +171,7 @@ function onBtnFiltroFechado(e = false){
         e.preventDefault();
     }
     onFiltroFechados.style.display = 'none'
-    offFiltroFechados.style.display = 'block'
+    offFiltroFechados.style.display = 'flex'
     localStorage.setItem('fechados', false)
     atualizarEventos()
 }
@@ -179,7 +179,7 @@ function offBtnFiltroFechado(e = false){
     if(e){
         e.preventDefault();
     }
-    onFiltroFechados.style.display = 'block'
+    onFiltroFechados.style.display = 'flex'
     offFiltroFechados.style.display = 'none'
     localStorage.setItem('fechados', true)
     atualizarEventos()
@@ -206,6 +206,7 @@ function criarDivEvento(id, nome, descricao, status, datacriacao){
                       </div>
                       <div class="card-footer text-body-secondary mb-0">
                         <button type="button" class="btn btn-primary poin" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable" onclick="visualizarEvento(event, ${id})">
+                            <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-312q70 0 119-49t49-119q0-70-49-119t-119-49q-70 0-119 49t-49 119q0 70 49 119t119 49Zm0-72q-40 0-68-28t-28-68q0-40 28-68t68-28q40 0 68 28t28 68q0 40-28 68t-68 28Zm0 192q-142.6 0-259.8-78.5Q103-349 48-480q55-131 172.2-209.5Q337.4-768 480-768q142.6 0 259.8 78.5Q857-611 912-480q-55 131-172.2 209.5Q622.6-192 480-192Zm0-288Zm0 216q112 0 207-58t146-158q-51-100-146-158t-207-58q-112 0-207 58T127-480q51 100 146 158t207 58Z"/></svg>
                             Visualizar
                         </button>
                       </div>
@@ -249,9 +250,13 @@ function visualizarEvento(e = false, id){
           <p class="m-1">Salvo com sucesso!</p>
         </div>
         <div class="modal-footer d-flex justify-content-center align-items-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)" >Fechar</button>
-          <button type="button" class="btn btn-primary" onclick="editarEvento(event, ${id})">Editar</button>
-          <button class="btn btn-outline-${status?'danger':'success'} m-0" data-bs-dismiss="modal" onclick="${status?'desativarEvento(event, '+id+')':'restaurarEvento(event, '+id+')'}">${status?'☓':'✓'}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)" data-bs-dismiss="modal" aria-label="Close">
+          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
+          Fechar</button>
+          <button type="button" class="btn btn-primary" onclick="editarEvento(event, ${id})">
+          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-312q70 0 119-49t49-119q0-70-49-119t-119-49q-70 0-119 49t-49 119q0 70 49 119t119 49Zm0-72q-40 0-68-28t-28-68q0-40 28-68t68-28q40 0 68 28t28 68q0 40-28 68t-68 28Zm0 192q-142.6 0-259.8-78.5Q103-349 48-480q55-131 172.2-209.5Q337.4-768 480-768q142.6 0 259.8 78.5Q857-611 912-480q-55 131-172.2 209.5Q622.6-192 480-192Zm0-288Zm0 216q112 0 207-58t146-158q-51-100-146-158t-207-58q-112 0-207 58T127-480q51 100 146 158t207 58Z"/></svg>
+          Editar</button>
+          <button class="btn btn-outline-${status?'danger':'success'} m-0" onclick="${status?'desativarEvento(event, '+id+')':'restaurarEvento(event, '+id+')'}" data-bs-dismiss="modal" aria-label="Close">${status?'☓':'✓'}</button>
         </div>
     `
 }
@@ -287,12 +292,14 @@ function editarEvento(e = false, id){
         <div class="modal-header">
           <span class="status bg-${status?'success':'danger'}" title="${status?'Aberto':'Fechado'}"></span>
           <p class="m-1 ms-4 btn btn-secondary cursor-none">${id}</p>
+          <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
           <h5 contenteditable="true" class="card-title fs-1 ms-3" oninput="limiteCaracterh5(event)" id="h5Nome">${nome}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
           <p class="m-0 p-0">Data de Criação: ${datacriacao}</p>
         </div>
+          <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
           <pre contenteditable="true" style="font-family: inherit;white-space: pre-line; word-wrap: break-word; border: 1px solid #ccc; padding: 10px;" class="modal-body pt-1 fs-2" id="preDescricao" oninput="limiteCaracterPre(event)">
           ${descricao}
           </pre>
@@ -303,8 +310,12 @@ function editarEvento(e = false, id){
           <p class="m-1">Salvo com sucesso!</p>
         </div>
         <div class="modal-footer d-flex justify-content-center align-items-center">
-          <button type="button" class="btn btn-danger" onclick="cancelarEdicaoEvento(event, ${id})">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="salvarEdicaoEvento(event, ${id})">Salvar</button>
+          <button type="button" class="btn btn-danger" onclick="cancelarEdicaoEvento(event, ${id})">
+          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q55 0 104-18t89-50L236-673q-32 40-50 89t-18 104q0 130 91 221t221 91Zm244-119q32-40 50-89t18-104q0-130-91-221t-221-91q-55 0-104 18t-89 50l437 437Z"/></svg>
+          Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="salvarEdicaoEvento(event, ${id})" data-bs-dismiss="modal" aria-label="Close">
+          <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-312q70 0 119-49t49-119q0-70-49-119t-119-49q-70 0-119 49t-49 119q0 70 49 119t119 49Zm0-72q-40 0-68-28t-28-68q0-40 28-68t68-28q40 0 68 28t28 68q0 40-28 68t-68 28Zm0 192q-142.6 0-259.8-78.5Q103-349 48-480q55-131 172.2-209.5Q337.4-768 480-768q142.6 0 259.8 78.5Q857-611 912-480q-55 131-172.2 209.5Q622.6-192 480-192Zm0-288Zm0 216q112 0 207-58t146-158q-51-100-146-158t-207-58q-112 0-207 58T127-480q51 100 146 158t207 58Z"/></svg>
+          Salvar</button>
         </div>
     `
 }
@@ -380,11 +391,15 @@ function salvarEditadoEvento(id, nome, descricao, status, datacriacao){
     visualizarEvento(false, id)
     setTimeout(()=>{
         const alertEventoSalvo = document.getElementById('alertEventoSalvo2')
-        alertEventoSalvo.style.display = 'flex'
+        if(alertEventoSalvo){
+            alertEventoSalvo.style.display = 'flex'
+        }
     }, 0)
     setTimeout(()=>{
         const alertEventoSalvo = document.getElementById('alertEventoSalvo2')
-        alertEventoSalvo.style.display = 'none'
+        if(alertEventoSalvo){
+            alertEventoSalvo.style.display = 'none'
+        }
     }, 3000)
 }
 
@@ -439,8 +454,8 @@ function executarAtualizacao(){
     const divNenhumResultado = document.getElementById('divNenhumResultado')
     const divResultadoEncontrado = document.getElementById('divResultadoEncontrado')
     const pResultadoEncontrado = document.getElementById('pResultadoEncontrado')
-    const abertos = onfiltroAbertos.style.display == 'block'? true:false
-    const fechados = onFiltroFechados.style.display == 'block'? true:false
+    const abertos = onfiltroAbertos.style.display == 'flex'? true:false
+    const fechados = onFiltroFechados.style.display == 'flex'? true:false
     document.getElementById('eventos-painel').style.display = 'flex'
     conteudoModal.innerHTML = ''
     let divEventos = ''
