@@ -436,7 +436,7 @@ function salvarEditadoEvento(id, nome, descricao, status, datacriacao, dataEvent
         if(alertEventoSalvo){
             alertEventoSalvo.style.display = 'flex'
         }
-    }, 300)
+    }, 0)
     setTimeout(()=>{
         const alertEventoSalvo = document.getElementById('alertEventoSalvo2')
         if(alertEventoSalvo){
@@ -539,7 +539,7 @@ function executarAtualizacao(){
     divLoading.style.display = 'none'; // Oculta o indicador de carregamento
 
     resolve(); // Resolve a Promise após o processamento
-}, 0); // Simulação de carregamento
+}, 300); // Simulação de carregamento
 });
 }
 function cancelarNovoEvento(e = false){
