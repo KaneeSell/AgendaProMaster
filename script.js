@@ -595,7 +595,7 @@ function executarAtualizacao(){
     divLoading.style.display = 'none'; // Oculta o indicador de carregamento
 
     resolve(); // Resolve a Promise após o processamento
-}, 0); // Simulação de carregamento
+}, 300); // Simulação de carregamento
 });
 }
 function cancelarNovoEvento(e = false){
