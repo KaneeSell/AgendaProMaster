@@ -4,6 +4,7 @@ maxCaracterNome(false, localStorage.getItem('maxNome'))
 maxCaracterDescricao(false, localStorage.getItem('maxDescricao'))
 verificaEventoVazio()
 verificarFecharAposSalvar()
+verificaTheme()
 // Declarando constantes
 const barNavegacao = document.getElementById('barNavegacao');
 const divBemVindo = document.getElementById('divBemVindo')
@@ -44,16 +45,49 @@ function verificaAbertoFechado(){
     }
 }
 verificaAbertoFechado()
+function verificaTheme(){
+    setTimeout(()=>{
+        const theme = localStorage.getItem('theme')
+        if(!theme){
+            localStorage.setItem('theme', 'auto')
+            document.getElementById('flatpickr-theme').disabled = true
+        } else{
+            if(theme == 'light'){
+                document.getElementById('flatpickr-theme').disabled = true
+            }
+            if(theme == 'dark'){
+                document.getElementById('flatpickr-theme').disabled = false
+            }
+            if(theme == 'auto'){
+                if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.getElementById('flatpickr-theme').disabled = false
+                } else {
+                    document.getElementById('flatpickr-theme').disabled = true
+                }
+            }
+        }
+    },0)
+
+}
 // Data Flatpickr
 flatpickr('#datePicker', {
+    mode: "range",
+    minDate: "today",
     enableTime: true,
     dateFormat: "d/m/Y H:i",
-    defaultDate: dataAtual()+' '+horaAtual(),
+    minDate: dataAtual(),
+    "plugins": [new confirmDatePlugin({
+            confirmIcon: "✓", // Ícone no botão
+            confirmText: "Confirmar ", // Texto no botão
+            showAlways: false, // Mostra o botão sempre
+            theme: "light" // Tema (pode ser "light" ou "dark")
+        })]
 })
+
 function dataAtual(){
     const data = new Date()
-    const dia = data.getDate()+1
-    const mes = data.getMonth()+1
+    const dia = data.getDate() < 10? `0${data.getDate()}`: `${data.getDate()}`
+    const mes = data.getMonth()+1 < 10? `0${data.getMonth()+1}`: `${data.getMonth()+1}`
     const ano = data.getFullYear()
     return `${dia}/${mes}/${ano}`
 }
@@ -63,7 +97,6 @@ function horaAtual(){
     const min = data.getMinutes()
     return `${hora}:${min}`
 }
-console.log(dataAtual())
 // Funções
 function retornoEventos(){
     return JSON.parse(localStorage.getItem('eventos'))
@@ -173,14 +206,18 @@ document.querySelectorAll('.toast')
 // Constantes Agenda
 const inputName = document.getElementById('inputName')
 const inputDescricao = document.getElementById('inputDescricao')
+const datePicker = document.getElementById('datePicker')
 // Funções Agenda
 function btnNovoEvento(e){
     if(e){
         e.preventDefault();
     }
     inputName.maxLength = localStorage.getItem('maxNome')
+    inputName.value = ''
     inputDescricao.maxLength = localStorage.getItem('maxDescricao')
-    }
+    inputDescricao.value = ''
+    datePicker.value = ''
+}
 function onBtnFiltroAberto(e = false){
     if(e){
         e.preventDefault();
@@ -217,6 +254,11 @@ function offBtnFiltroFechado(e = false){
     localStorage.setItem('fechados', true)
     atualizarEventos()
 }
+function verificaCamposNovoEvento(){
+    if(inputDescricao.value && inputName.value && datePicker.value){
+        document.getElementById('btn-salvar-novo-evento').disabled = false
+    }
+}
 function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
     const eventosPainel = document.getElementById('eventos-painel')
     return `
@@ -225,15 +267,14 @@ function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
                       <div class="card-body position-relative pt-3" style="max-height: 250px;overflow: hidden;">
                         <div class="eventNumber">
                         <div class="d-flex justify-content-center align-items-center flex-row flex-nowrap text-align-center">
-                            <span class="status bg-${status?'success':'danger'}" title="${status? 'Aberto':'Fechado'}"></span>
-                            <p class="m-1 ms-4 btn btn-secondary cursor-none">${id}</p>
+                            <p class="m-1 me-5">${id}</p>
                         </div>
                           <h5 class="card-title">${nome}</h5>
                           <div>
-                            <button class="btn btn-outline-${status?'danger':'success'} m-0 ms-4-5" onclick="${status?'desativarEvento(event,'+id+')':'restaurarEvento(event,'+id+')'}">${status?'☓':'✓'}</button>
+                            <button class="btn btn-outline-${status?'success ms-2':'danger'} m-0" onclick="${status?'desativarEvento(event,'+id+')':'restaurarEvento(event,'+id+')'}">${status?'Ativo':'Inativo'}</button>
                           </div>
                         </div>
-                        <p class="card-text mb-0" id="limiteDescricao">${descricao}</p>
+                        <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5" id="preDescricao">${descricao}</pre>
                         <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
                         </div>
                       </div>
@@ -245,12 +286,12 @@ function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
                       </div>
                       <div class="card-footer text-body-secondary d-flex justify-content-center align-items-center p-0">
                         <p>
-                        Data do Evento: <code class="fs-6">${dataevento}</code>
+                        Evento: <code class="fs-6">${dataevento.replace('to','até')}</code>
                         </p>
                         </div>
                         <div class="card-footer text-body-secondary d-flex justify-content-center align-items-center p-0">
                         <p>
-                        Data de Criação: <code class="fs-6">${datacriacao}</code>
+                        Criação: <code class="fs-6">${datacriacao}</code>
                         </p>
                       </div>
                     </div>
@@ -270,31 +311,28 @@ function visualizarEvento(e = false, id){
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
-          <span class="status bg-${status?'success':'danger'}" title="${status?'Aberto':'Fechado'}"></span>
-          <p class="m-1 ms-4 btn btn-secondary cursor-none">${id}</p>
-          <h5 class="card-title fs-1 ms-3" id="h5Nome">${nome}</h5>
+          <p class="m-1">${id}</p>
+          <h5 class="card-title fs-4 ms-3" id="h5Nome">${nome}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
-          <p class="m-0 p-0">Data do Evento: <code class="fs-6">${dataEvento}</code></p>
+          <p class="m-0 p-0">Evento: <code class="fs-6">${dataEvento.replace('to','até')}</code></p>
         </div>
-          <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-2" id="preDescricao">
-          ${descricao}
-          </pre>
+          <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5" id="preDescricao">${descricao}</pre>
         <div class="list-group-item list-group-item-action list-group-item-danger d-flex justify-content-center text-align-center pb-0 d-none" id="alertEventoMaximoCaracter">
           <p class="m-1">Maximo limite de caracteres atingido!</p>
         </div>
         <div class="list-group-item list-group-item-action list-group-item-success  justify-content-center text-align-center pb-0" id="alertEventoSalvo2">
           <p class="m-1">Salvo com sucesso!</p>
         </div>
-        <div class="modal-footer d-flex justify-content-center align-items-center">
+        <div class="modal-footer d-flex justify-content-center align-items-center gap-1">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onsubmit="cancelarNovoEvento(event)" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()">
           <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
           Fechar</button>
           <button type="button" class="btn btn-primary" onclick="editarEvento(event, ${id})">
           <svg class="text-body" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M480-312q70 0 119-49t49-119q0-70-49-119t-119-49q-70 0-119 49t-49 119q0 70 49 119t119 49Zm0-72q-40 0-68-28t-28-68q0-40 28-68t68-28q40 0 68 28t28 68q0 40-28 68t-68 28Zm0 192q-142.6 0-259.8-78.5Q103-349 48-480q55-131 172.2-209.5Q337.4-768 480-768q142.6 0 259.8 78.5Q857-611 912-480q-55 131-172.2 209.5Q622.6-192 480-192Zm0-288Zm0 216q112 0 207-58t146-158q-51-100-146-158t-207-58q-112 0-207 58T127-480q51 100 146 158t207 58Z"/></svg>
           Editar</button>
-          <button class="btn btn-outline-${status?'danger':'success'} m-0" onclick="${status?'desativarEvento(event, '+id+')':'restaurarEvento(event, '+id+')'}" data-bs-dismiss="modal" aria-label="Close">${status?'☓':'✓'}</button>
+          <button class="btn btn-outline-${status?'danger':'success'} m-0" onclick="${status?'desativarEvento(event, '+id+')':'restaurarEvento(event, '+id+')'}" data-bs-dismiss="modal" aria-label="Close">${status?'Inativar':'Ativar'}</button>
         </div>
     `
 }
@@ -310,8 +348,9 @@ function salvarEdicaoEvento(e = false, id){
     }
     const eventos = retornoEventos()
     const nome = document.getElementById('h5Nome').innerText
+    const datePickerEdit = document.getElementById('datePickerEdit')
     const datacriacao = eventos[id].datacriacao
-    const dataEvento = eventos[id].dataevento
+    const dataEvento = datePickerEdit.value
     const status = eventos[id].status
     const descricao = document.getElementById('preDescricao').innerText
     const conteudoModal = document.getElementById('conteudoModal') 
@@ -330,17 +369,18 @@ function editarEvento(e = false, id){
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
-          <span class="status bg-${status?'success':'danger'}" title="${status?'Aberto':'Fechado'}"></span>
-          <p class="m-1 ms-4 btn btn-secondary cursor-none">${id}</p>
+          <p class="m-1">${id}</p>
           <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
-          <h5 contenteditable="true" class="card-title fs-1 ms-3" oninput="limiteCaracterh5(event)" id="h5Nome">${nome}</h5>
+          <h5 contenteditable="true" class="card-title fs-4 ms-3" oninput="limiteCaracterh5(event)" id="h5Nome">${nome}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
-          <p class="m-0 p-0">Data do Evento: <code class="fs-6">${dataEvento}</code></p>
-        </div>
+          
+            <div class="input-group">
+              <span class="input-group-text" for="datePickerEdit">Data</span>
+              <input type="text" id="datePickerEdit" class="form-control" required>
+            </div>
           <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
-          <pre contenteditable="true" style="font-family: inherit;white-space: pre-line; word-wrap: break-word; border: 1px solid #ccc; padding: 10px;" class="modal-body pt-1 fs-2" id="preDescricao" oninput="limiteCaracterPre(event)">
+          <pre contenteditable="true" style="font-family: inherit;white-space: pre-line; word-wrap: break-word; border: 1px solid #ccc; padding: 10px;" class="modal-body pt-1 fs-5" id="preDescricao" oninput="limiteCaracterPre(event)">
           ${descricao}
           </pre>
         <div class="list-group-item list-group-item-action list-group-item-danger justify-content-center text-align-center pb-0" id="alertEventoMaximoCaracter">
@@ -358,6 +398,21 @@ function editarEvento(e = false, id){
           Salvar</button>
         </div>
     `
+    // Data FlatpickrEdit
+flatpickr('#datePickerEdit', {
+    mode: "range",
+    minDate: "today",
+    enableTime: true,
+    dateFormat: "d/m/Y H:i",
+    defaultDate: dataEvento,
+    minDate: dataAtual(),
+    "plugins": [new confirmDatePlugin({
+            confirmIcon: "✓", // Ícone no botão
+            confirmText: "Confirmar ", // Texto no botão
+            showAlways: false, // Mostra o botão sempre
+            theme: "light" // Tema (pode ser "light" ou "dark")
+        })]
+})
 }
 function limiteCaracterh5(e){
     if(e){
@@ -489,6 +544,7 @@ function salvarNovoEvento(e = false){
         document.getElementById('titleAgendaProMaster').focus()
         document.querySelector('[data-bs-dismiss="modal"]').click();
     }
+    document.getElementById('btn-salvar-novo-evento').disabled = true
 }
 function executarAtualizacao(){
     return new Promise(resolve => {
