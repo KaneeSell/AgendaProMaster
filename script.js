@@ -259,6 +259,33 @@ function verificaCamposNovoEvento(){
         document.getElementById('btn-salvar-novo-evento').disabled = false
     }
 }
+function semData(e = false){
+    if(e){
+        e.preventDefault()
+    }
+    const datePicker = document.getElementById('datePicker')
+    const divInputData = document.getElementById('divInputData')
+    datePicker.value = ''
+    divInputData.style.display = 'none'
+}
+// function dataUnica(e = false){
+//     if(e){
+//         e.preventDefault()
+//     }
+//     const datePicker = document.getElementById('datePicker')
+//     const divInputData = document.getElementById('divInputData')
+//     datePicker.value = ''
+//     divInputData.style.display = 'flex'
+// }
+// function multiData(e = false){
+//     if(e){
+//         e.preventDefault()
+//     }
+//     const datePicker = document.getElementById('datePicker')
+//     const divInputData = document.getElementById('divInputData')
+//     datePicker.value = ''
+//     divInputData.style.display = 'flex'
+// }
 function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
     const eventosPainel = document.getElementById('eventos-painel')
     return `
@@ -274,7 +301,7 @@ function criarDivEvento(id, nome, descricao, status, datacriacao, dataevento){
                             <button class="btn btn-outline-${status?'success ms-2':'danger'} m-0" onclick="${status?'desativarEvento(event,'+id+')':'restaurarEvento(event,'+id+')'}">${status?'Ativo':'Inativo'}</button>
                           </div>
                         </div>
-                        <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5" id="preDescricao">${descricao}</pre>
+                        <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5">${descricao}</pre>
                         <div class="d-flex justify-content-center position-absolute bottom-0 start-0 w-100 pb-2">
                         </div>
                       </div>
@@ -311,14 +338,14 @@ function visualizarEvento(e = false, id){
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
-          <p class="m-1">${id}</p>
+          <p class="m-1">${id+1}</p>
           <h5 class="card-title fs-4 ms-3" id="h5Nome">${nome}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('titleAgendaProMaster').focus()"></button>
           </div>
           <div class="list-group-item list-group-item-primary d-flex justify-content-center align-items-center p-0">
           <p class="m-0 p-0">Evento: <code class="fs-6">${dataEvento.replace('to','até')}</code></p>
         </div>
-          <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5" id="preDescricao">${descricao}</pre>
+          <pre style="font-family: inherit;white-space: pre-line; word-wrap: break-word; padding: 10px;" class="modal-body pt-1 fs-5">${descricao}</pre>
         <div class="list-group-item list-group-item-action list-group-item-danger d-flex justify-content-center text-align-center pb-0 d-none" id="alertEventoMaximoCaracter">
           <p class="m-1">Maximo limite de caracteres atingido!</p>
         </div>
@@ -348,12 +375,12 @@ function salvarEdicaoEvento(e = false, id){
     }
     const eventos = retornoEventos()
     const nome = document.getElementById('h5Nome').innerText
+    const preDescricao = document.getElementById('preDescricao')
+    const descricao = preDescricao.innerText
     const datePickerEdit = document.getElementById('datePickerEdit')
     const datacriacao = eventos[id].datacriacao
     const dataEvento = datePickerEdit.value
     const status = eventos[id].status
-    const descricao = document.getElementById('preDescricao').innerText
-    const conteudoModal = document.getElementById('conteudoModal') 
     salvarEditadoEvento(id, nome, descricao, status, datacriacao, dataEvento)
     visualizarEvento(false, id)
 }
@@ -369,7 +396,7 @@ function editarEvento(e = false, id){
     const conteudoModal = document.getElementById('conteudoModal') 
     conteudoModal.innerHTML = `
         <div class="modal-header">
-          <p class="m-1">${id}</p>
+          <p class="m-1">${id+1}</p>
           <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#B7B7B7"><path d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z"/></svg>
           <h5 contenteditable="true" class="card-title fs-4 ms-3" oninput="limiteCaracterh5(event)" id="h5Nome">${nome}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -576,16 +603,26 @@ function executarAtualizacao(){
         }
     }
     if(resultado == 0){
-        divNenhumResultado.style.display = 'block'
-        divResultadoEncontrado.style.display = 'none'
+        if(divNenhumResultado){
+            divNenhumResultado.style.display = 'block'
+        }
+        if(divResultadoEncontrado){
+            divResultadoEncontrado.style.display = 'none'
+        }
         divLoading.style.display = 'none'
         // setTimeout(()=>{
             //     divNenhumResultado.style.display = 'none'
             // }, 2000)
         } else{
-            divNenhumResultado.style.display = 'none'
-            divResultadoEncontrado.style.display = 'block'
-            pResultadoEncontrado.innerText = `${resultado} Resultados encontrados.`
+            if(divNenhumResultado){
+                divNenhumResultado.style.display = 'none'
+            }
+            if(divResultadoEncontrado){
+                divResultadoEncontrado.style.display = 'block'
+            }
+            if(pResultadoEncontrado){
+                pResultadoEncontrado.innerText = `${resultado} Resultados encontrados.`
+            }
             divLoading.style.display = 'none'
             // setTimeout(()=>{
                 //     divResultadoEncontrado.style.display = 'none'

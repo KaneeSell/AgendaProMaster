@@ -289,10 +289,20 @@
               <span class="input-group-text" id="basic-addon1">Nome</span>
               <input id="inputName" type="text" class="form-control" placeholder="Nome Evento" aria-label="Username" aria-describedby="basic-addon1" autocomplete="off" oninput="verificaCamposNovoEvento()" required>
             </div>
-            <div class="input-group">
+            <div class="input-group" id="divInputData">
               <span class="input-group-text" for="dataPicker">Data</span>
               <input type="text" id="datePicker" class="form-control" oninput="verificaCamposNovoEvento()" required>
             </div>
+            <!-- <div class="btn-group">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Tipo de data
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" onclick="semData(event)">Sem Data</a></li>
+                <li><a class="dropdown-item" onclick="dataUnica(event)">Data Única</a></li>
+                <li><a class="dropdown-item" onclick="multiData(event)">Multiplas Datas</a></li>
+              </ul>
+            </div> -->
             <label class="mb-1 fs-5" for="inputDescricao">Descrição:</label>
             <div class="input-group">
               <textarea id="inputDescricao" autocomplete="off" cols="30" rows="10" class="form-control" aria-label="With textarea" oninput="verificaCamposNovoEvento()" required></textarea>
