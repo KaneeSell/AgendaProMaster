@@ -93,8 +93,8 @@ function dataAtual(){
 }
 function horaAtual(){
     const data = new Date()
-    const hora = data.getHours()
-    const min = data.getMinutes()
+    const hora = data.getHours() < 10? `0${data.getHours()}`: `${data.getHours()}`
+    const min = data.getMinutes() < 10? `0${data.getMinutes()}`: `${data.getMinutes()}`
     return `${hora}:${min}`
 }
 // Funções
