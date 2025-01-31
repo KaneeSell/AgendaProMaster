@@ -1,5 +1,6 @@
-# AgendaProMaster
 <div align="center">
+<h1>AgendaProMaster</h1>
+<br>
 <a href="https://kaneesell.github.io/AgendaProMaster/">
 <img alt="Static Badge" src="https://capsule-render.vercel.app/api?type=waving&height=200&color=gradient&text=AgendaProMaster">
 </a><br>
